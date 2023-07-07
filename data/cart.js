@@ -1,10 +1,12 @@
 
 const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
 
+let cartTotal = 0;
 let cartHTML = '';
 cart.forEach((item)=> { 
   products.forEach((product)=> {
-    if (item.productId === product.id) {    
+    if (item.productId === product.id) { 
+      cartTotal+=product.priceCents;   
       cartHTML += `
       <div class="cart-item-container">
         <div class="delivery-date">
@@ -86,15 +88,73 @@ cart.forEach((item)=> {
       `;
       }
     });
-  
 });
 
 document.querySelector('.js-order-summary').innerHTML = cartHTML;
 
-// if (cartHTML = '') {
-//   const emptyList = `
-//     <p>Empty Cart</p>
-//   `;
-//   document.querySelector('.js-order-summary').innerText = emptyList;
-// }
+function checkOutHead() {
+  let shippingHandling = 0;
+  let totalBeforeTax = 0;
+  let estimateTax = 0;
+  let orderTotal = 0;
+  let cartQuantity = 0;
+  cart.forEach((item)=> {
+    cartQuantity+=item.quantity;
+  });
+
+  if (cartQuantity > 0) {
+    shippingHandling = 499;
+    totalBeforeTax = cartTotal + shippingHandling;
+    estimateTax = 0.1 * totalBeforeTax;
+    orderTotal = totalBeforeTax + estimateTax;
+  }
+
+  document.querySelector('.js-checkout-head').innerHTML = `
+  <p>Checkout (<a class="return-to-home-link"
+  href="amazon.html">${cartQuantity} items</a>)</p>
+  `;
+
+  document.querySelector('.js-payment-summary').innerHTML = `
+  <div class="payment-summary-title">
+    Order Summary
+  </div>
+
+  <div class="payment-summary-row">
+    <div>Items (${cartQuantity}):</div>
+    <div class="payment-summary-money">$${(cartTotal/100).toFixed(2)}</div>
+  </div>
+
+  <div class="payment-summary-row">
+    <div>Shipping &amp; handling:</div>
+    <div class="payment-summary-money">$${(shippingHandling/100).toFixed(2)}</div>
+  </div>
+
+  <div class="payment-summary-row subtotal-row">
+    <div>Total before tax:</div>
+    <div class="payment-summary-money">$${(totalBeforeTax/100).toFixed(2)}</div>
+  </div>
+
+  <div class="payment-summary-row">
+    <div>Estimated tax (10%):</div>
+    <div class="payment-summary-money">$${(estimateTax/100).toFixed(2)}</div>
+  </div>
+
+  <div class="payment-summary-row total-row">
+    <div>Order total:</div>
+    <div class="payment-summary-money">$${(orderTotal/100).toFixed(2)}</div>
+  </div>
+
+  <button class="place-order-button button-primary"
+  onclick="
+  localStorage.removeItem('cartItems');
+  ">
+    Place your order
+  </button>
+  `;
+
+
+}
+checkOutHead();
+
+
 
