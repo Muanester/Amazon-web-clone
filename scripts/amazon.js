@@ -26,23 +26,23 @@ products.forEach(product => {
     </div>
 
     <div class="product-quantity-container">
-      <select>
-        <option selected value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-      </select>
+    <select>
+      <option selected value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+    </select>
     </div>
 
     <div class="product-spacer"></div>
 
-    <div class="added-to-cart">
+    <div class="added-to-cart js-added-to-cart">
       <img src="images/icons/checkmark.png">
       Added
     </div>
@@ -56,7 +56,6 @@ products.forEach(product => {
 );
 
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
-
 
 document.querySelectorAll('.js-add-to-cart').forEach((button)=> {
   let matchingItem;
@@ -77,15 +76,23 @@ document.querySelectorAll('.js-add-to-cart').forEach((button)=> {
       });
     }
 
+    
 
     localStorage.setItem('cartItems', JSON.stringify(cart));
 
     cartQuantityCount();
-
+    
+    
   });
-  
 });
 
+// addedPopup();
+function addedPopup() {
+  let addedToCart = false;
+    const addedDisp = document.querySelector('.js-added-to-cart');
+    addedDisp.style.display = 'block';
+    console.log('Added');
+}
 
 function cartQuantityCount() {
   let cartQuantity = 0;
@@ -94,4 +101,5 @@ function cartQuantityCount() {
   });
   document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
 }
+
 
