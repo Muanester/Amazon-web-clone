@@ -1,10 +1,7 @@
 
 const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-if (cart) {
-  renderCartItems();
-}
-// renderCartItems();
+renderCartItems();
 function renderCartItems() {
   let cartHTML = '';
   cart.forEach((item)=> { 
