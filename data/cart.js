@@ -109,14 +109,11 @@ function checkOut() {
   let cartQuantity = 0;
   cart.forEach((item)=> {
     cartQuantity+=item.quantity;
-  });
-
-  cart.forEach((item)=> { 
     products.forEach((product)=> {
       if (item.productId === product.id) {
         cartTotal+=product.priceCents * item.quantity;
       }
-    })
+    });
   });
 
   if (cartQuantity > 0) {
