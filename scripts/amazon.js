@@ -106,15 +106,14 @@ function handleSelectedValue(value) {
       if (matchingItem) {
         return;
       } else {
-          cart.push({
-            productId: productId,
-            quantity: optVal
-          });        
+        cart.push({
+          productId: productId,
+          quantity: optVal
+        });        
       }
 
       console.log(cart);
       localStorage.setItem('cartItems', JSON.stringify(cart));
-      
       
       cartQuantityCount();
     })  
