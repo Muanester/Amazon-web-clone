@@ -26,9 +26,10 @@ products.forEach(product => {
       $${(product.priceCents / 100).toFixed(2)}
     </div>
 
-    <div class="product-quantity-container js-product-quantity-container">
+    <div class="product-quantity-container js-quantity-selector-${product.id}">
     <select>
-      <option selected value="1">1</option>
+      <option selected>-</option>
+      <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
       <option value="4">4</option>
@@ -58,27 +59,31 @@ products.forEach(product => {
 
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
-let thisCallBack = false;
-let resetValue = true;
+
 function selectValue(callback) {
+  let thisCallBack = false;
+  let resetValue = true;
+
   document.querySelectorAll('.js-product-quantity-container select').forEach((selectOption)=> {
     selectOption.addEventListener('change', ()=> {
       resetValue = false;
       thisCallBack = true;
-      const selectedOption = selectOption.options[selectOption.selectedIndex];
-      const selectedValue = selectedOption.value;
-      if (typeof callback === 'function' && !resetValue) {
-        callback(selectedValue);
-        resetValue = true;
-        thisCallBack = false;
+      if (!resetValue && thisCallBack) {
+        const selectedOption = selectOption.options[selectOption.selectedIndex];
+        const selectedValue = selectedOption.value;
+        if (typeof callback === 'function') {
+          callback(selectedValue);
+        }
       }
-    });
-    if (!thisCallBack && resetValue) {
-      callback(1);
-    }
+      });
+      if (!thisCallBack && resetValue) {
+        // callback(1);
+      }
   });
+  
 }
 
+selectValue(handleSelectedValue);
 
 function handleSelectedValue(value) {
   optVal = Number(value);
@@ -109,18 +114,19 @@ function handleSelectedValue(value) {
         cart.push({
           productId: productId,
           quantity: optVal
-        });        
+        });
+           
       }
 
       console.log(cart);
       localStorage.setItem('cartItems', JSON.stringify(cart));
       
       cartQuantityCount();
+
     })  
 })
 }
 
-selectValue(handleSelectedValue);
 
 function cartQuantityCount() {
   let cartQuantity = 0;
@@ -129,3 +135,4 @@ function cartQuantityCount() {
   });
   document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
 }
+
