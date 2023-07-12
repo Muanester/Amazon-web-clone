@@ -1,4 +1,5 @@
 
+
 const orders = JSON.parse(localStorage.getItem('orderItems')) || [];
 
 renderOrderItems();
@@ -66,7 +67,7 @@ function renderOrderItems() {
         <div class="product-quantity">
           Quantity: ${item.quantity}
         </div>
-        <button class="buy-again-button button-primary">
+        <button class="buy-again-button button-primary js-buy-again-btn" data-product-id="${product.id}">
           <img class="buy-again-icon" src="images/icons/buy-again.png">
           <span class="buy-again-message">Buy it again</span>
         </button>
@@ -85,15 +86,40 @@ function renderOrderItems() {
   });
   document.querySelector('.js-order-container').innerHTML = orderObjectsHTML;
   document.querySelector('.js-order-details-grid').innerHTML = orderItemsHTML;
+}
+
+cartQuantityCount();
+function cartQuantityCount() {
+  let cartQuantity = 0;
+  cart.forEach((item)=> {
+    cartQuantity+=item.quantity;
+  });
   document.querySelector('.js-orders-cart-quantity').innerHTML = cartQuantity;
 }
 
-  
+document.querySelectorAll('.js-buy-again-btn').forEach((button)=> {
+  button.addEventListener('click', ()=> {
+    const productId = button.dataset.productId;
+    let matchingItem;
+    let quantity = 1;
+    cart.forEach((item)=> {
+      if (item.productId === productId) {
+        matchingItem = item;
+      } 
+    });
+
+    if (matchingItem) {
+      matchingItem.quantity += quantity;
+    } else {
+      cart.push({
+        productId: productId,
+        quantity: quantity
+      });
+    }
+
+    localStorage.setItem('cartItems', JSON.stringify(cart));
     
-
-
-
-
-
-
+    cartQuantityCount();
+  });
+});
 

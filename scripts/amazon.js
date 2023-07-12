@@ -91,7 +91,6 @@ document.querySelectorAll('.js-add-to-cart').forEach((button, index)=> {
         productId: productId,
         quantity: selectedValue
       });
-      
     }
 
     localStorage.setItem('cartItems', JSON.stringify(cart));
