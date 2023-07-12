@@ -115,7 +115,6 @@ function checkOut() {
       }
     });
   });
-
   if (cartQuantity > 0) {
     shippingHandling = 499;
     totalBeforeTax = cartTotal + shippingHandling;
@@ -125,7 +124,7 @@ function checkOut() {
 
   document.querySelector('.js-checkout-head').innerHTML = `
   <p>Checkout (<a class="return-to-home-link"
-  href="amazon.html">${cartQuantity} items</a>)</p>
+  href="orders.html">${cartQuantity} items</a>)</p>
   `;
 
   document.querySelector('.js-payment-summary').innerHTML = `
@@ -158,16 +157,24 @@ function checkOut() {
     <div class="payment-summary-money">$${(orderTotal/100).toFixed(2)}</div>
   </div>
 
-  <button class="place-order-button button-primary"
-  onclick="
-  localStorage.removeItem('cartItems');
-  ">
+  <button class="place-order-button button-primary js-place-order-btn">
     Place your order
   </button>
   `;
 
   deleteProduct();
 }
+
+document.querySelector('.js-place-order-btn').addEventListener('click', ()=> {
+  cart.forEach((item)=> {
+    const orderItem = item;
+    orders.push(orderItem);
+  });
+  localStorage.setItem('orderItems', JSON.stringify(orders));
+  localStorage.removeItem('cartItems');
+  renderCartItems();
+});
+
 
 function deleteProduct(){
   document.querySelectorAll('.js-delete-item').forEach((deleteItem, index)=> {

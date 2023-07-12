@@ -28,8 +28,7 @@ products.forEach(product => {
 
     <div class="product-quantity-container js-quantity-selector-${product.id}">
     <select>
-      <option selected>-</option>
-      <option value="1">1</option>
+      <option selected value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
       <option value="4">4</option>
@@ -60,73 +59,47 @@ products.forEach(product => {
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
 
-function selectValue(callback) {
-  let thisCallBack = false;
-  let resetValue = true;
+let addedToCart = false;
+document.querySelectorAll('.js-add-to-cart').forEach((button, index)=> {
+  button.addEventListener('click', ()=> {
+    addedToCart = true;
+    if (addedToCart) {
+      const addedDisp = document.querySelectorAll('.js-added-to-cart');
+      addedThis = addedDisp[index];
+      addedThis.style.opacity = 1;
+      setTimeout(()=> {
+        addedThis.style.opacity = 0;
+      }, 1000);
+    }
 
-  document.querySelectorAll('.js-product-quantity-container select').forEach((selectOption)=> {
-    selectOption.addEventListener('change', ()=> {
-      resetValue = false;
-      thisCallBack = true;
-      if (!resetValue && thisCallBack) {
-        const selectedOption = selectOption.options[selectOption.selectedIndex];
-        const selectedValue = selectedOption.value;
-        if (typeof callback === 'function') {
-          callback(selectedValue);
-        }
-      }
+    const productId = button.dataset.productId;
+    let matchingItem;
+    cart.forEach((item)=> {
+      if (item.productId === productId) {
+        matchingItem = item;
+      } 
+    });
+
+    const quantitySelector = document.querySelector(`.js-quantity-selector-${productId} select`);
+    const quantityVal = quantitySelector.options[quantitySelector.selectedIndex];
+    const selectedValue = Number(quantityVal.value);
+    
+    if (matchingItem) {
+      matchingItem.quantity += selectedValue;
+    } else {
+      cart.push({
+        productId: productId,
+        quantity: selectedValue
       });
-      if (!thisCallBack && resetValue) {
-        // callback(1);
-      }
-  });
-  
-}
-
-selectValue(handleSelectedValue);
-
-function handleSelectedValue(value) {
-  optVal = Number(value);
-  let addedToCart = false;
-  document.querySelectorAll('.js-add-to-cart').forEach((button, index)=> {
-    button.addEventListener('click', ()=> {
-      addedToCart = true;
-      if (addedToCart) {
-        const addedDisp = document.querySelectorAll('.js-added-to-cart');
-        addedThis = addedDisp[index];
-        addedThis.style.opacity = 1;
-        setTimeout(()=> {
-          addedThis.style.opacity = 0;
-        }, 1000);
-      }
-
-      const productId = button.dataset.productId;
-      let matchingItem;
-      cart.forEach((item)=> {
-        if (productId === item.productId) {
-          matchingItem = item;
-        } 
-      });
-  
-      if (matchingItem) {
-        return;
-      } else {
-        cart.push({
-          productId: productId,
-          quantity: optVal
-        });
-           
-      }
-
-      console.log(cart);
-      localStorage.setItem('cartItems', JSON.stringify(cart));
       
-      cartQuantityCount();
+    }
 
-    })  
+    localStorage.setItem('cartItems', JSON.stringify(cart));
+    
+    cartQuantityCount();
+
+  })  
 })
-}
-
 
 function cartQuantityCount() {
   let cartQuantity = 0;
